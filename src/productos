@@ -1,0 +1,129 @@
+
+const { Router } = require('express');
+const router = Router();
+
+var sqlite = require('sqlite3').verbose();
+let db = new sqlite.Database('midb.db');
+
+router.get("/", (req, res, next) => {
+    var sql = "SELECT * FROM Producto"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": rows
+        })
+    });
+});
+
+router.get("/ping", (req, res, next) => {
+    res.status(200).json({ "Message": "OK" });
+    return;
+});
+
+//Para rutear la petición por el post para agregar
+router.post('/', (req, res) => {
+
+    const { Nombre, Precio } = req.body;
+    var sql = "Insert into Producto (Nombre, Precio) VALUES(?,?)";
+    var params = [Nombre, Precio];
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.log(err.message);
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "ID": this.lastID
+        })
+    });
+});
+
+router.post('/:id', (req, res) => {
+
+    const idr = req.params.id;
+    const { Nombre, Precio } = req.body;
+    console.log(Nombre , Precio)
+    var sql = "UPDATE Producto SET Nombre = ?, Precio = ? WHERE ID = ?";
+    var params = [Nombre, Precio, idr];
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.log(err.message);
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "UPDATE ID": this.lastID
+        })
+    });
+});
+
+router.delete('/:id', (req, res) => {
+
+    const idr = req.params.id;
+    var sql = "DELETE FROM PRODUCTO WHERE ID = ?";
+    var params = [idr];
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.log(err.message);
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "ID Delete": idr
+        })
+    });
+});
+
+router.put('/:id', (req, res) => {
+
+    const idr = req.params.id;
+    const { Nombre, Precio } = req.body;
+    var sql = "UPDATE Producto SET Nombre = ?, Precio = ? WHERE ID = ?";
+    var params = [Nombre, Precio, idr];
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.log(err.message);
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "UPDATE ID": this.lastID
+        })
+    });
+});
+
+router.patch('/:id', (req, res) => {
+
+    const idr = req.params.id;
+    const { Nombre, Precio } = req.body;
+    console.log(Nombre , Precio)
+    var sql = "UPDATE Producto SET Nombre = ?, Precio = ? WHERE ID = ?";
+    var params = [Nombre, Precio, idr];
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.log(err.message);
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.json({
+            "message": "success",
+            "UPDATE ID": this.lastID
+        })
+    });
+});
+
+module.exports = router;
