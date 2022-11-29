@@ -4,7 +4,7 @@ const router = Router();
 var sqlite = require("sqlite3").verbose();
 let db = new sqlite.Database("midb.db");
 
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   var sql = "SELECT * FROM Producto";
   var params = [];
   db.all(sql, params, (err, rows) => {
@@ -19,7 +19,7 @@ router.get("/", (req, res, next) => {
   });
 });
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   const ID = req.params["id"];
   var sql = "SELECT * FROM Producto WHERE ID = ?";
   var params = [ID];
@@ -35,13 +35,13 @@ router.get("/:id", (req, res, next) => {
   });
 });
 
-router.get("/ping", (req, res, next) => {
+router.get("/ping", async (req, res, next) => {
   res.status(200).json({ Message: "OK" });
   return;
 });
 
 //Para rutear la petición por el post para agregar
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { Nombre, Precio } = req.body;
   var sql = "Insert into Producto (Nombre, Precio) VALUES(?,?)";
   var params = [Nombre, Precio];
@@ -59,7 +59,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.post("/:id", (req, res) => {
+router.post("/:id", async (req, res) => {
   const idr = req.params.id;
   const { Nombre, Precio } = req.body;
   console.log(Nombre, Precio);
@@ -79,7 +79,7 @@ router.post("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const idr = req.params.id;
   var sql = "DELETE FROM PRODUCTO WHERE ID = ?";
   var params = [idr];
@@ -97,7 +97,7 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const idr = req.params.id;
   const { Nombre, Precio } = req.body;
   var sql = "UPDATE Producto SET Nombre = ?, Precio = ? WHERE ID = ?";
@@ -116,7 +116,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
   const idr = req.params.id;
   const { Nombre, Precio } = req.body;
   console.log(Nombre, Precio);
